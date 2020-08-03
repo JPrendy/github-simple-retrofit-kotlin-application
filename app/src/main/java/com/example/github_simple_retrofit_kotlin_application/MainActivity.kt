@@ -10,6 +10,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 
 class MainActivity : AppCompatActivity() {
@@ -24,14 +25,23 @@ class MainActivity : AppCompatActivity() {
         characterAdapter = GithubAdapter()
         character_recyclerview.adapter = characterAdapter
 
-        val potterApi = Retrofit.Builder()
+        //Gson implementation version
+//        val githubApi = Retrofit.Builder()
+//                .baseUrl((application as GithubApp).getBaseUrl())
+//                .addConverterFactory(GsonConverterFactory.create(Gson()))
+//                .client(OkHttpProvider.getOkHttpClient())
+//                .build()
+//                .create(GithubApi::class.java)
+
+        //Moshi implementation version
+        val githubApi = Retrofit.Builder()
                 .baseUrl((application as GithubApp).getBaseUrl())
-                .addConverterFactory(GsonConverterFactory.create(Gson()))
+                .addConverterFactory(MoshiConverterFactory.create())
                 .client(OkHttpProvider.getOkHttpClient())
                 .build()
                 .create(GithubApi::class.java)
 
-        potterApi.getCharacters().enqueue(object : Callback<List<GithubModel>> {
+        githubApi.getCharacters().enqueue(object : Callback<List<GithubModel>> {
             override fun onFailure(call: Call<List<GithubModel>>, t: Throwable) {
                 showErrorState()
             }
